@@ -14,4 +14,6 @@
   ]
 , packages = ./packages.dhall
 , sources = [ "src/**/*.purs" ]
+, license = "MIT"
+, repository = "https://github.com/purescript-node/purescript-node-buffer-blob.git"
 }
