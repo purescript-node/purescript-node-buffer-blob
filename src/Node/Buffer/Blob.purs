@@ -11,8 +11,7 @@ module Node.Buffer.Blob
   , stream
   , text
   , toArrayBuffer
-  )
-  where
+  ) where
 
 import Prelude
 
