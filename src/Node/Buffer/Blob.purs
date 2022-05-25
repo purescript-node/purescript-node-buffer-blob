@@ -50,21 +50,25 @@ toBlobOptionsImpl { "type": mediaType, endings } =
 
 foreign import fromStringImpl :: String -> Nullable BlobOptionsImpl -> Blob
 
+-- | Creates a new Blob from a string
 fromString :: String -> Maybe BlobOptions -> Blob
 fromString str opts = fromStringImpl str (opts <#> toBlobOptionsImpl # toNullable)
 
 foreign import fromStringsImpl :: Array String -> Nullable BlobOptionsImpl -> Blob
 
+-- | Creates a new Blob from multiple strings
 fromStrings :: Array String -> Maybe BlobOptions -> Blob
 fromStrings strs opts = fromStringsImpl strs (opts <#> toBlobOptionsImpl # toNullable)
 
 foreign import fromArrayBufferImpl :: ArrayBuffer -> Nullable BlobOptionsImpl -> Blob
 
+-- | Creates a new Blob from an `ArrayBuffer`
 fromArrayBuffer :: ArrayBuffer -> Maybe BlobOptions -> Blob
 fromArrayBuffer str opts = fromArrayBufferImpl str (opts <#> toBlobOptionsImpl # toNullable)
 
 foreign import fromArrayBuffersImpl :: Array ArrayBuffer -> Nullable BlobOptionsImpl -> Blob
 
+-- | Creates a new Blob from multiple `ArrayBuffer`s
 fromArrayBuffers :: Array ArrayBuffer -> Maybe BlobOptions -> Blob
 fromArrayBuffers strs opts = fromArrayBuffersImpl strs (opts <#> toBlobOptionsImpl # toNullable)
 
