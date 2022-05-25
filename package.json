@@ -1,0 +1,28 @@
+{
+  "name": "purescript-node-buffer-blob",
+  "private": true,
+  "description": "Bindings to node-buffer's Blob type.",
+  "main": "index.js",
+  "devDependencies": {
+    "eslint": "^7.15.0",
+    "pulp": "16.0.0-0",
+    "purescript-psa": "^0.8.2",
+    "rimraf": "^3.0.2"
+  },
+  "scripts": {
+    "clean": "rimraf output && rimraf .pulp-cache",
+    "build": "eslint src && pulp build -- --censor-lib --strict",
+    "test": "pulp test -- --censor-lib --strict"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/purescript-node/purescript-node-buffer-blob.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/purescript-node/purescript-node-buffer-blob/issues"
+  },
+  "homepage": "https://github.com/purescript-node/purescript-node-buffer-blob#readme"
+}
