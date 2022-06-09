@@ -12,8 +12,7 @@ module Node.Buffer.Blob
   , text
   , toArrayBuffer
   , tpe
-  )
-  where
+  ) where
 
 import Prelude
 
@@ -69,13 +68,11 @@ foreign import fromDataViewImpl :: NonEmptyArray DataView -> Nullable BlobOption
 fromDataView :: NonEmptyArray DataView -> Maybe BlobOptions -> Blob
 fromDataView strs opts = fromDataViewImpl strs (opts <#> toBlobOptionsImpl # toNullable)
 
-
 foreign import fromBlobsImpl :: NonEmptyArray Blob -> Nullable BlobOptionsImpl -> Blob
 
 -- | Creates a new Blob from one ore more `Blob`s
 fromBlobs :: NonEmptyArray Blob -> Maybe BlobOptions -> Blob
 fromBlobs strs opts = fromBlobsImpl strs (opts <#> toBlobOptionsImpl # toNullable)
-
 
 -- | Copies the data in the Blob to a new JS ArrayBuffer
 foreign import toArrayBuffer :: Blob -> Effect (Promise ArrayBuffer)
