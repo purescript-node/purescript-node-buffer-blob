@@ -7,6 +7,7 @@ import Prelude
 import Control.Promise as Promise
 import Data.Array.NonEmpty ((:))
 import Data.Array.NonEmpty as NEA
+import Data.ArrayBuffer.Types (DataView)
 import Data.Maybe (Maybe(..))
 import Data.MediaType.Common as MediaTypes
 import Effect (Effect)
@@ -16,6 +17,8 @@ import Effect.Class.Console (log)
 import Node.Buffer.Blob as Blob
 import Test.Assert (assertEqual)
 
+foreign import testDataView :: Effect DataView
+
 test :: Effect Unit
 test = launchAff_ do
   log "Testing fromStrings with no options"
@@ -23,6 +26,10 @@ test = launchAff_ do
   log "Testing fromStrings with options"
   testFromStringsWithOptions
   log "Testing fromArrayBuffer / toArrayBuffer"
+  testFromBlobs
+  log "Testing fromDataView"
+  testFromDataView
+  log "Testing fromBlobs"
   testToFromArrayBuffer
   log "Testing size"
   testSize
@@ -50,10 +57,27 @@ test = launchAff_ do
 
   testToFromArrayBuffer = do
     let
-      expected = "hello world"
+      expected = "helloworld"
       blob = Blob.fromStrings (NEA.singleton expected) Nothing
     buffer <- Promise.toAffE $ Blob.toArrayBuffer blob
     actual <- Promise.toAffE $ Blob.text $ Blob.fromArrayBuffers (NEA.singleton buffer) Nothing
+    liftEffect $ assertEqual { actual, expected }
+
+  testFromBlobs = do
+    let
+      expected = "helloworld"
+      blob1 = Blob.fromStrings (NEA.singleton "hello") Nothing
+      blob2 = Blob.fromStrings (NEA.singleton "world") Nothing
+      blob = Blob.fromBlobs (blob1 : NEA.singleton blob2) Nothing
+    actual <- Promise.toAffE $ Blob.text $ blob
+    liftEffect $ assertEqual { actual, expected }
+
+  testFromDataView = do
+    typedArray <- liftEffect testDataView
+    let
+      expected = 10
+      blob = Blob.fromDataView (NEA.singleton typedArray) Nothing
+      actual = Blob.size $ blob
     liftEffect $ assertEqual { actual, expected }
 
   testSize = do

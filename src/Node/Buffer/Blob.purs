@@ -3,6 +3,8 @@ module Node.Buffer.Blob
   , BlobEnding(..)
   , BlobOptions
   , fromArrayBuffers
+  , fromBlobs
+  , fromDataView
   , fromStrings
   , size
   , slice
@@ -10,13 +12,14 @@ module Node.Buffer.Blob
   , text
   , toArrayBuffer
   , tpe
-  ) where
+  )
+  where
 
 import Prelude
 
 import Control.Promise (Promise)
 import Data.Array.NonEmpty (NonEmptyArray)
-import Data.ArrayBuffer.Types (ArrayBuffer, Uint8Array)
+import Data.ArrayBuffer.Types (ArrayBuffer, DataView, Uint8Array)
 import Data.Maybe (Maybe)
 import Data.MediaType (MediaType(..))
 import Data.Newtype (un)
@@ -50,15 +53,29 @@ toBlobOptionsImpl { "type": mediaType, endings } =
 
 foreign import fromStringsImpl :: NonEmptyArray String -> Nullable BlobOptionsImpl -> Blob
 
--- | Creates a new Blob from multiple strings
+-- | Creates a new Blob from one or more strings
 fromStrings :: NonEmptyArray String -> Maybe BlobOptions -> Blob
 fromStrings strs opts = fromStringsImpl strs (opts <#> toBlobOptionsImpl # toNullable)
 
 foreign import fromArrayBuffersImpl :: NonEmptyArray ArrayBuffer -> Nullable BlobOptionsImpl -> Blob
 
--- | Creates a new Blob from multiple `ArrayBuffer`s
+-- | Creates a new Blob from one ore more `ArrayBuffer`s
 fromArrayBuffers :: NonEmptyArray ArrayBuffer -> Maybe BlobOptions -> Blob
 fromArrayBuffers strs opts = fromArrayBuffersImpl strs (opts <#> toBlobOptionsImpl # toNullable)
+
+foreign import fromDataViewImpl :: NonEmptyArray DataView -> Nullable BlobOptionsImpl -> Blob
+
+-- | Creates a new Blob from one ore more `DataView`s
+fromDataView :: NonEmptyArray DataView -> Maybe BlobOptions -> Blob
+fromDataView strs opts = fromDataViewImpl strs (opts <#> toBlobOptionsImpl # toNullable)
+
+
+foreign import fromBlobsImpl :: NonEmptyArray Blob -> Nullable BlobOptionsImpl -> Blob
+
+-- | Creates a new Blob from one ore more `Blob`s
+fromBlobs :: NonEmptyArray Blob -> Maybe BlobOptions -> Blob
+fromBlobs strs opts = fromBlobsImpl strs (opts <#> toBlobOptionsImpl # toNullable)
+
 
 -- | Copies the data in the Blob to a new JS ArrayBuffer
 foreign import toArrayBuffer :: Blob -> Effect (Promise ArrayBuffer)

@@ -1,24 +1,35 @@
 import * as buffer from "buffer";
 
+const fromSources = function (sources, options) {
+  if (options === null) {
+    return new buffer.Blob(sources);
+  } else {
+    return new buffer.Blob(sources, options);
+  }
+};
 
 export const fromStringsImpl = function (sources) {
   return function (options) {
-    if (options === null) {
-      return new buffer.Blob(sources);
-    } else {
-      return new buffer.Blob(sources, options);
-    }
+    return fromSources(sources, options);
   };
 };
 
 
 export const fromArrayBuffersImpl = function (sources) {
   return function (options) {
-    if (options === null) {
-      return new buffer.Blob(sources);
-    } else {
-      return new buffer.Blob(sources, options);
-    }
+    return fromSources(sources, options);
+  };
+};
+
+export const fromBlobsImpl = function (sources) {
+  return function (options) {
+    return fromSources(sources, options);
+  };
+};
+
+export const fromDataViewImpl = function (sources) {
+  return function (options) {
+    return fromSources(sources, options);
   };
 };
 
