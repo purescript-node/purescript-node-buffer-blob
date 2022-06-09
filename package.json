@@ -16,7 +16,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/purescript-node/purescript-node-buffer-blob.git"
+    "url": "https://github.com/purescript-node/purescript-node-buffer-blob.git"
   },
   "keywords": [],
   "author": "",
@@ -24,5 +24,6 @@
   "bugs": {
     "url": "https://github.com/purescript-node/purescript-node-buffer-blob/issues"
   },
-  "homepage": "https://github.com/purescript-node/purescript-node-buffer-blob#readme"
+  "homepage": "https://github.com/purescript-node/purescript-node-buffer-blob#readme",
+  "type": "module"
 }

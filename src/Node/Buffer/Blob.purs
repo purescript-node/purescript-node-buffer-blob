@@ -2,20 +2,20 @@ module Node.Buffer.Blob
   ( Blob
   , BlobEnding(..)
   , BlobOptions
-  , fromArrayBuffer
   , fromArrayBuffers
-  , fromString
   , fromStrings
   , size
   , slice
   , stream
   , text
   , toArrayBuffer
+  , tpe
   ) where
 
 import Prelude
 
 import Control.Promise (Promise)
+import Data.Array.NonEmpty (NonEmptyArray)
 import Data.ArrayBuffer.Types (ArrayBuffer, Uint8Array)
 import Data.Maybe (Maybe)
 import Data.MediaType (MediaType(..))
@@ -48,28 +48,16 @@ toBlobOptionsImpl { "type": mediaType, endings } =
   toEndings Transparent = "transparent"
   toEndings Native = "native"
 
-foreign import fromStringImpl :: String -> Nullable BlobOptionsImpl -> Blob
-
--- | Creates a new Blob from a string
-fromString :: String -> Maybe BlobOptions -> Blob
-fromString str opts = fromStringImpl str (opts <#> toBlobOptionsImpl # toNullable)
-
-foreign import fromStringsImpl :: Array String -> Nullable BlobOptionsImpl -> Blob
+foreign import fromStringsImpl :: NonEmptyArray String -> Nullable BlobOptionsImpl -> Blob
 
 -- | Creates a new Blob from multiple strings
-fromStrings :: Array String -> Maybe BlobOptions -> Blob
+fromStrings :: NonEmptyArray String -> Maybe BlobOptions -> Blob
 fromStrings strs opts = fromStringsImpl strs (opts <#> toBlobOptionsImpl # toNullable)
 
-foreign import fromArrayBufferImpl :: ArrayBuffer -> Nullable BlobOptionsImpl -> Blob
-
--- | Creates a new Blob from an `ArrayBuffer`
-fromArrayBuffer :: ArrayBuffer -> Maybe BlobOptions -> Blob
-fromArrayBuffer str opts = fromArrayBufferImpl str (opts <#> toBlobOptionsImpl # toNullable)
-
-foreign import fromArrayBuffersImpl :: Array ArrayBuffer -> Nullable BlobOptionsImpl -> Blob
+foreign import fromArrayBuffersImpl :: NonEmptyArray ArrayBuffer -> Nullable BlobOptionsImpl -> Blob
 
 -- | Creates a new Blob from multiple `ArrayBuffer`s
-fromArrayBuffers :: Array ArrayBuffer -> Maybe BlobOptions -> Blob
+fromArrayBuffers :: NonEmptyArray ArrayBuffer -> Maybe BlobOptions -> Blob
 fromArrayBuffers strs opts = fromArrayBuffersImpl strs (opts <#> toBlobOptionsImpl # toNullable)
 
 -- | Copies the data in the Blob to a new JS ArrayBuffer
@@ -87,3 +75,5 @@ foreign import stream :: Blob -> Effect (ReadableStream Uint8Array)
 -- | Returns a promise that fulfills with the contents of the Blob decoded as a UTF-8 string.
 foreign import text :: Blob -> Effect (Promise String)
 
+-- | Returns the content type of the blob
+foreign import tpe :: Blob -> String

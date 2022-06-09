@@ -5,7 +5,8 @@ module Test.Node.Buffer.Blob
 import Prelude
 
 import Control.Promise as Promise
-import Data.Array (fold)
+import Data.Array.NonEmpty ((:))
+import Data.Array.NonEmpty as NEA
 import Data.Maybe (Maybe(..))
 import Data.MediaType.Common as MediaTypes
 import Effect (Effect)
@@ -17,10 +18,6 @@ import Test.Assert (assertEqual)
 
 test :: Effect Unit
 test = launchAff_ do
-  log "Testing fromString with no options"
-  testFromStringNoOptions
-  log "Testing fromString with options"
-  testFromStringWithOptions
   log "Testing fromStrings with no options"
   testFromStringsNoOptions
   log "Testing fromStrings with options"
@@ -31,56 +28,51 @@ test = launchAff_ do
   testSize
   log "Testing slice"
   testSlice
+  log "Test type"
+  testType
   where
-  testFromStringNoOptions = do
-    let
-      expected = "hello world"
-      blob = Blob.fromString expected Nothing
-    actual <- Promise.toAffE $ Blob.text blob
-    liftEffect $ assertEqual { actual, expected }
-
-  testFromStringWithOptions = do
-    let
-      expected = "{\"hello\":\"world\"}"
-      blob = Blob.fromString expected (Just { "type": MediaTypes.applicationJSON, endings: Blob.Transparent })
-    actual <- Promise.toAffE $ Blob.text blob
-    liftEffect $ assertEqual { actual, expected }
 
   testFromStringsNoOptions = do
     let
-      input = [ "hello", "world" ]
-      expected = fold input
+      input = "hello" : (NEA.singleton "world")
+      expected = NEA.fold1 input
       blob = Blob.fromStrings input Nothing
     actual <- Promise.toAffE $ Blob.text blob
     liftEffect $ assertEqual { actual, expected }
 
   testFromStringsWithOptions = do
     let
-      input = [ "{\"hello\":\"world\"}", "{\"hola\":\"mundo\"}" ]
-      expected = fold input
-      blob = Blob.fromStrings input Nothing
+      input = "{\n\"hello\":\"world\"\n}" : (NEA.singleton "{\n\"hola\":\"mundo\"\n}")
+      expected = NEA.fold1 input
+      blob = Blob.fromStrings input (Just { "type": MediaTypes.applicationJSON, endings: Blob.Transparent })
     actual <- Promise.toAffE $ Blob.text blob
     liftEffect $ assertEqual { actual, expected }
 
   testToFromArrayBuffer = do
     let
       expected = "hello world"
-      blob = Blob.fromString expected Nothing
+      blob = Blob.fromStrings (NEA.singleton expected) Nothing
     buffer <- Promise.toAffE $ Blob.toArrayBuffer blob
-    actual <- Promise.toAffE $ Blob.text $ Blob.fromArrayBuffer buffer Nothing
+    actual <- Promise.toAffE $ Blob.text $ Blob.fromArrayBuffers (NEA.singleton buffer) Nothing
     liftEffect $ assertEqual { actual, expected }
 
   testSize = do
     let
       expected = 11
-      blob = Blob.fromString "hello world" Nothing
+      blob = Blob.fromStrings (NEA.singleton "hello world") Nothing
       actual = Blob.size blob
     liftEffect $ assertEqual { actual, expected }
 
   testSlice = do
     let
       expected = "ello wor"
-      blob = Blob.fromString "hello world" Nothing
+      blob = Blob.fromStrings (NEA.singleton "hello world") Nothing
     actual <- Promise.toAffE $ Blob.text $ Blob.slice 1 9 blob
     liftEffect $ assertEqual { actual, expected }
 
+  testType = do
+    let
+      expected = "text/plain"
+      blob = Blob.fromStrings (NEA.singleton "hello world") (Just { "type": MediaTypes.textPlain, endings: Blob.Transparent })
+      actual = Blob.tpe blob
+    liftEffect $ assertEqual { actual, expected }
