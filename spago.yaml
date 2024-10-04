@@ -1,0 +1,31 @@
+package:
+  name: node-buffer-blob
+  publish:
+    license: MIT
+    version: 1.0.0
+    location:
+      githubOwner: purescript-node
+      githubRepo: purescript-node-buffer-blob
+  dependencies:
+    - aff-promise
+    - arraybuffer-types
+    - arrays
+    - effect
+    - maybe
+    - media-types
+    - newtype
+    - node-buffer
+    - nullable
+    - prelude
+    - web-streams
+  test:
+    main: Test.Main
+    dependencies:
+      - console
+      - assert
+      - aff
+      - arrays
+workspace:
+  extraPackages: {}
+  packageSet:
+    registry: 60.2.1
