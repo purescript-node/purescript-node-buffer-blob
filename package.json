@@ -5,14 +5,16 @@
   "main": "index.js",
   "devDependencies": {
     "eslint": "^7.15.0",
-    "pulp": "16.0.0-0",
-    "purescript-psa": "^0.8.2",
+    "purescript": "0.15.16",
+    "purs-tidy": "0.11.1",
+    "spago": "1.0.4",
     "rimraf": "^3.0.2"
   },
   "scripts": {
-    "clean": "rimraf output && rimraf .pulp-cache",
-    "build": "eslint src && pulp build -- --censor-lib --strict",
-    "test": "pulp test -- --censor-lib --strict"
+    "clean": "rimraf output",
+    "build": "eslint src && spago build --pedantic-packages --strict",
+    "test": "spago test --pedantic-packages --strict",
+    "check": "purs-tidy check src test"
   },
   "repository": {
     "type": "git",
