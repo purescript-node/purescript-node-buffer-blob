@@ -14,7 +14,6 @@ export const fromStringsImpl = function (sources) {
   };
 };
 
-
 export const fromArrayBuffersImpl = function (sources) {
   return function (options) {
     return fromSources(sources, options);
@@ -65,4 +64,4 @@ export const text = function (blob) {
 
 export const tpe = function (blob) {
   return blob.type;
-}; 
+};
