@@ -24,4 +24,8 @@ package:
     location:
       githubOwner: purescript-node
       githubRepo: purescript-node-buffer-blob
-workspace: {}
+workspace:
+  packageSet:
+    registry: 81.4.0
+  extraPackages:
+    node-buffer: 8.0.0
