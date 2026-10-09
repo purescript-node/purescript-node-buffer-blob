@@ -18,6 +18,12 @@ package:
       - aff
       - assert
       - console
+  publish:
+    version: 1.0.1
+    license: MIT
+    location:
+      githubOwner: purescript-node
+      githubRepo: purescript-node-buffer-blob
 workspace:
   packageSet:
     registry: 0.0.1
